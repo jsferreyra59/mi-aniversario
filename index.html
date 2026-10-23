@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0c2b">
+<title>7 años con vos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ===== COLOR PRINCIPAL: cambiá --accent para personalizar ===== */
+  --bg:#0a0c2b; --bg2:#1b1650; --bg3:#2d1b5a;
+  --accent:#fbd1c9;          /* botón "Comenzar", brillos */
+  --lav:#cdb8f5;             /* títulos, bordes, iconos */
+  --txt:#e9e4ff;             /* texto */
+  --gold:#f5c96b;
+  --paper:#f4e1c8; --ink:#4d2f26;
+  --script:'Caveat',cursive; --sans:'Quicksand',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:linear-gradient(180deg,var(--bg) 0%,#141046 55%,var(--bg3) 100%);color:var(--txt);font-family:var(--sans)}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+svg{display:block}
+.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- pantallas ---------- */
+.screen{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);--chrome:290px;
+  opacity:0;visibility:hidden;transform:scale(1.015);transition:opacity .9s ease,visibility .9s,transform 1.1s ease}
+.screen.active{opacity:1;visibility:visible;transform:none}
+.rv{opacity:0}
+.active .rv{animation:rise 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*.16s + .25s)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- imagen ---------- */
+.media{position:relative;width:100%;flex:1 1 0;min-height:0;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 80%,transparent 100%);
+          mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 80%,transparent 100%)}
+.media img{width:100%;height:100%;object-fit:cover;object-position:center;animation:kb 26s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.09) translateY(-1%)}}
+.ph{background:radial-gradient(ellipse at 50% 70%,#3a2a78 0%,#17124a 55%,#0c0d33 100%)}
+.cover{justify-content:flex-start}
+.cover .media{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none;margin:0;flex:none;-webkit-mask-image:none;mask-image:none}
+.cover .media img{object-position:50% 100%}
+.cover .media::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,8,40,.55) 0,rgba(8,8,40,.25) 30%,rgba(8,8,40,0) 55%)}
+
+/* ---------- textos ---------- */
+.script{font-family:var(--script)}
+.head{padding:26px 20px 6px;text-align:center;width:100%;z-index:3}
+.head h2{font-family:var(--script);font-weight:500;font-size:clamp(26px,7.4vw,34px);color:var(--lav);display:flex;gap:12px;justify-content:center;align-items:center;text-shadow:0 0 18px rgba(170,140,255,.55)}
+.head h2 .ic{width:1.05em;height:1.05em}
+.line{height:1px;width:180px;margin:10px auto 0;background:linear-gradient(90deg,transparent,var(--lav),transparent);opacity:.7}
+.copy{padding:6px 28px 12px;text-align:center;font-size:clamp(13.5px,3.7vw,15.5px);line-height:1.6;color:#e7e1fb;max-width:520px;z-index:3}
+.copy .acc{display:block;margin-top:14px;font-family:var(--script);font-size:clamp(22px,6vw,26px);color:#d8c4ff;text-shadow:0 0 14px rgba(190,150,255,.6)}
+.foot{padding:6px 0 28px;z-index:3}
+
+/* ---------- botones ---------- */
+.btn{display:inline-flex;gap:9px;align-items:center;justify-content:center;padding:11px 30px;border-radius:99px;font-size:15px;
+  border:1.5px solid var(--lav);background:rgba(24,19,74,.55);backdrop-filter:blur(6px);color:var(--txt);
+  box-shadow:0 0 18px rgba(176,140,255,.28),inset 0 0 12px rgba(176,140,255,.12);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(190,150,255,.55)}
+.btn:active{transform:scale(.97)}
+.btn .ic{font-size:17px}
+.btn.solid{background:linear-gradient(180deg,#ffe0d8,var(--accent));color:#4a2a3c;border-color:transparent;font-weight:600;
+  box-shadow:0 0 26px rgba(251,209,201,.55);animation:pulse 3.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 42px rgba(251,209,201,.9)}}
+.arrow{position:absolute;top:48%;z-index:5;padding:14px;color:var(--lav);font-size:24px;opacity:.85;transition:transform .2s}
+.arrow:hover{transform:scale(1.25)}
+.arrow.l{left:2px}.arrow.r{right:2px}
+
+/* ---------- portada ---------- */
+.cover .top{text-align:center;padding:clamp(34px,8vh,70px) 22px 4px;z-index:3}
+.title{font-family:var(--script);font-weight:600;line-height:.82;font-size:clamp(76px,24vw,120px);transform:rotate(-6deg);
+  background:linear-gradient(180deg,#fff0e2 10%,#f9c4c6 90%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 14px rgba(255,200,210,.55));margin-bottom:6px;padding-right: 15px;}
+.title span{display:block;transform:translateX(18px);padding: 0 10px;}
+.title .hrt{display:block;font-style:normal;font-size:.3em;margin:.35em auto 0;text-align:center;transform:rotate(6deg) translateX(14px)}
+.title .hrt .ic{margin:0 auto;stroke:#ffd0d0;stroke-width:1.8}
+.sub{font-size:clamp(14px,4vw,16px);line-height:1.6;color:#f0e8ff;margin:3px auto 20px;max-width:340px;text-shadow:0 1px 3px rgba(6,6,30,.9),0 0 14px rgba(6,6,30,.8)}
+.cover .top{display:flex;flex-direction:column;align-items:center}
+
+/* ---------- índice ---------- */
+.idx{justify-content:flex-start;padding-top:clamp(40px,9vh,80px)}
+.idx h2{font-family:var(--script);font-weight:500;font-size:34px;color:var(--lav);text-align:center;text-shadow:0 0 18px rgba(170,140,255,.55)}
+.idx .div{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--lav);margin:8px 0 14px}
+.idx .div i{height:1px;width:70px;background:linear-gradient(90deg,transparent,var(--lav))}.idx .div i+svg+i{transform:scaleX(-1)}
+.idx p.d{font-size:14px;color:#d9d0f3;text-align:center;max-width:250px;margin:0 auto 24px;line-height:1.5}
+.list{width:min(86vw,360px);display:flex;flex-direction:column;gap:14px}
+.item{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:99px;border:1.5px solid rgba(205,184,245,.6);background:rgba(28,22,86,.55);
+  font-size:15px;text-align:left;box-shadow:0 0 16px rgba(160,130,255,.18);transition:.25s}
+.item:hover{border-color:var(--lav);box-shadow:0 0 26px rgba(176,140,255,.5);transform:translateX(4px)}
+.item .ic{font-size:22px;color:var(--lav)}.item .ch{margin-left:auto;font-size:16px;opacity:.8}
+.hint{margin-top:26px;font-size:12.5px;color:#bcb2e0;text-align:center;display:flex;gap:8px;justify-content:center;align-items:center}
+.close{position:absolute;top:calc(18px + env(safe-area-inset-top));right:18px;font-size:24px;color:var(--lav);padding:8px}
+
+/* ---------- polaroid (cap. 2) ---------- */
+.pol{background:none;-webkit-mask-image:none;mask-image:none;display:flex;align-items:center;justify-content:center}
+.frame{position:relative;width:min(76%,520px);aspect-ratio:4/3.1;padding:3.2% 3.2% 6%;background:#f3e4cf;transform:rotate(-2.5deg);
+  box-shadow:0 0 0 1px rgba(255,255,255,.2),0 0 40px rgba(255,210,170,.35),0 20px 40px rgba(0,0,0,.5);animation:sway 7s ease-in-out infinite alternate}
+@keyframes sway{to{transform:rotate(1.5deg) translateY(-6px)}}
+.frame .in{width:100%;height:100%;overflow:hidden}.frame img{animation:none}
+.spark{position:absolute;color:var(--gold);text-shadow:0 0 12px var(--gold);animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25;transform:scale(.7)}}
+
+/* ---------- sobre ---------- */
+.env{justify-content:space-between;text-align:center}
+.bg{position:absolute;inset:0;z-index:0;-webkit-mask-image:none;mask-image:none}
+.env .t{padding-top:clamp(40px,10vh,90px);z-index:3}
+.env h2{font-family:var(--script);font-weight:500;font-size:36px;color:var(--lav);text-shadow:0 0 18px rgba(170,140,255,.6)}
+.env .t p{font-size:16px;color:#e6dcfa;margin-top:4px}
+.env .bg img{animation:float 6s ease-in-out infinite alternate;object-position:50% 50%}
+@keyframes float{from{transform:scale(1.02) translateY(8px)}to{transform:scale(1.07) translateY(-8px)}}
+.env .foot{padding-bottom:clamp(40px,10vh,80px)}
+
+/* ---------- carta ---------- */
+.letter{justify-content:center;overflow:hidden}
+.stage{position:absolute;left:50%;top:50%;width:268vw;aspect-ratio:16/9;container-type:inline-size;transform:translate(-49.3%,-50%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent)}
+.stage>img{width:100%;height:100%;object-fit:cover}
+.paperbox{position:absolute;left:49.3%;top:50%;width:27.5%;height:68%;transform:translate(-50%,-50%) rotate(-4deg);
+  font-family:var(--script);font-size:1.3cqw;line-height:1.38;color:var(--ink);overflow:auto;scrollbar-width:none}
+.paperbox::-webkit-scrollbar{display:none}
+.paperbox p{margin-bottom:.9em}.paperbox .hi{font-size:1.1em}
+.paperbox .sig{text-align:right;font-size:1.5em;margin-top:.5em;font-weight:600}
+.paperbox .ln{display:block;opacity:0}
+.active .paperbox .ln{animation:rise .9s both;animation-delay:calc(var(--i)*.28s + 1s)}
+.letter .foot{position:absolute;bottom:0;left:0;right:0;text-align:center;z-index:5}
+.paper-fallback{position:absolute;left:49.3%;top:50%;width:30%;height:76%;transform:translate(-50%,-50%) rotate(-4deg);background:var(--paper);box-shadow:0 0 40px rgba(255,200,150,.3)}
+
+/* ---------- final ---------- */
+.fin .copy{font-size:clamp(15px,4.2vw,17px);padding-bottom:4px}
+.fin .te{font-family:var(--script);font-size:30px;color:var(--lav);text-align:center;text-shadow:0 0 16px rgba(190,150,255,.6)}
+.fin .te .ic{margin:2px auto 0;font-size:22px}
+.fin .div2{display:flex;align-items:center;gap:10px;justify-content:center;color:#f3a9c0;margin:8px 0 6px}
+.fin .div2 i{height:1px;width:80px;background:linear-gradient(90deg,transparent,var(--lav))}.fin .div2 i:last-child{transform:scaleX(-1)}
+.fin .div2 .ic{fill:#f3a9c0;stroke:none;font-size:14px}
+
+/* ---------- partículas ---------- */
+.fx{position:fixed;pointer-events:none;z-index:9;color:#ff9fb5;text-shadow:0 0 10px #ff9fb5;animation:up var(--d,6s) linear forwards}
+@keyframes up{from{opacity:0;transform:translateY(0) scale(.6)}15%{opacity:1}to{opacity:0;transform:translate(var(--x,0),-60vh) scale(1.1)}}
+.burst{position:fixed;pointer-events:none;z-index:99;color:var(--gold);text-shadow:0 0 8px var(--gold);animation:bs .8s ease-out forwards}
+@keyframes bs{to{opacity:0;transform:translate(var(--x),var(--y)) scale(.3)}}
+
+/* ============ MÓVIL: imagen de fondo grande, texto encima ============ */
+@media (max-width:819px){
+  .screen{justify-content:flex-end}
+  .cover{justify-content:flex-start}.idx{justify-content:flex-start}.env{justify-content:space-between}.letter{justify-content:center}
+  .head{position:absolute;top:0;left:0;padding-top:calc(24px + env(safe-area-inset-top))}
+  .head::before{content:"";position:absolute;inset:0 0 -34px 0;z-index:-1;background:linear-gradient(to bottom,rgba(8,8,40,.55),rgba(8,8,40,0))}
+  .media{position:absolute;top:0;left:0;right:0;height:86%;flex:none;
+    -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 52%,rgba(0,0,0,.75) 66%,rgba(0,0,0,.4) 80%,rgba(0,0,0,.12) 92%,transparent 100%);
+            mask-image:linear-gradient(to bottom,#000 0,#000 52%,rgba(0,0,0,.75) 66%,rgba(0,0,0,.4) 80%,rgba(0,0,0,.12) 92%,transparent 100%)}
+  .cover .media,.bg{height:100%;-webkit-mask-image:none;mask-image:none}
+  .media.pol{height:80%;padding-top:56px;-webkit-mask-image:none;mask-image:none}
+  .media img{object-position:50% 35%}
+  .cover .media img{object-position:50% 100%}
+  .copy{text-shadow:0 1px 3px rgba(6,6,30,.95),0 0 18px rgba(6,6,30,.9),0 0 34px rgba(10,8,50,.7)}
+  .head h2{text-shadow:0 1px 3px rgba(6,6,30,.9),0 0 18px rgba(170,140,255,.55)}
+  .fin .te{text-shadow:0 1px 3px rgba(6,6,30,.9),0 0 16px rgba(190,150,255,.6)}
+}
+
+/* ============ ESCRITORIO ============ */
+@media (min-width:820px){
+  .screen{justify-content:center;gap:6px}
+  .media{flex:none;width:min(92vw,calc((100dvh - var(--chrome))*16/9));aspect-ratio:16/9;border-radius:24px;margin:8px 0;
+    -webkit-mask-image:none;mask-image:none;box-shadow:0 0 0 1px rgba(205,184,245,.25),0 0 60px rgba(120,90,255,.3),0 30px 60px rgba(0,0,0,.5)}
+  .cover{--chrome:400px}.fin{--chrome:340px}
+  .cover .media{-webkit-mask-image:none;mask-image:none}
+  .pol{box-shadow:none}
+  .frame{width:min(54%,560px)}
+  .bg{width:100%;height:100%;border-radius:0;box-shadow:none;margin:0;aspect-ratio:auto}
+  .arrow{top:50%}.arrow.l{left:calc(50% - min(46vw,calc((100dvh - 290px)*8/9)) - 50px)}.arrow.r{right:calc(50% - min(46vw,calc((100dvh - 290px)*8/9)) - 50px)}
+  .stage{width:min(100vw,calc(100dvh*16/9));-webkit-mask-image:none;mask-image:none}
+  .head{padding-top:10px}.foot{padding-bottom:12px}
+  .idx{justify-content:center;padding-top:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}.rv,.ln{opacity:1!important}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<main id="app"></main>
+
+<script>
+/* =====================================================================
+   PERSONALIZACIÓN — editá textos, fechas, nombres e imágenes acá
+   Imágenes: poné los archivos en la carpeta /img (c1.jpg, c3.png, etc.)
+   Las que aún no tenés están comentadas: descomentá la línea cuando
+   agregues el archivo (ej: sacá el "//" delante de img: "img/c2.jpg").
+   ===================================================================== */
+const CONFIG = {
+  years: 7,
+  names: { you: "", her: "" },          // opcional
+  date: "",                             // opcional, ej: "12 de abril de 2018"
+  cover:  "img/cover.png",
+  envelope: "img/env.jpg",
+  letterBg: "img/letter.jpg",
+  // final: "img/final.jpg" → imagen del beso/abrazo final (16:9). Descomentá cuando la tengas:
+  // final: "img/final.jpg",
+  final: "img/final.png",
+  chapters: [
+    { icon:"heart",  title:"1. El comienzo",
+      img:"img/c1.png",
+      text:"Todo empezó de la forma más inesperada…\ny qué bueno que pasó.\nDesde ese primer mensaje, todo fue distinto." },
+    { icon:"camera", title:"2. Nuestros momentos", polaroid:true,
+      img:"img/c2.png",
+      text:"Esa salida que terminó en pizza,\nrisas y una de las mejores noches\nde nuestras vidas." },
+    { icon:"star",   title:"3. Lo que nos hace únicos",
+      img:"img/c3.png",
+      text:"Tenerte hace que lo simple\nse vuelva especial.\nTu risa, tu forma de ver la vida,\ny cómo siempre encontrás la manera\nde hacerme sentir en casa." },
+    { icon:"moon",   title:"4. Nuestros sueños",
+      img:"img/c4.png",
+      text:"Aún nos quedan tantos lugares por conocer,\ntantas cosas por vivir, tantos sueños\npor cumplir…", accent:"Y me encanta que sea con vos." },
+    { icon:"inf",    title:"5. Para siempre",
+      img:"img/c5.png",
+      text:"No sé qué nos deparará el futuro,\npero sí sé que quiero seguir eligiéndote\ntodos los días.", accent:"Por muchos años más…" }
+  ],
+  letter:[
+    "Mi persona favorita,",
+    "Siete años. Parece mucho y a la vez\nse siente como un segundo.\nEn todo este tiempo, me regalaste\nmomentos que siempre voy a atesorar,\nme acompañaste en cada etapa,\ny me diste un amor que no es común.",
+    "Gracias por estar, por confiar,\npor las risas, por las locuras,\ny por hacer de lo cotidiano algo especial.",
+    "Quiero seguir construyendo todo lo lindo\nque nos queda, a tu lado.\nHoy y siempre.",
+    "Te amo ♡"
+  ],
+  finalText:"Por estos 7 años…\ny por todos los que nos quedan."
+};
+
+/* ============================ ICONOS ============================ */
+const P={
+ heart:'<path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/>',
+ camera:'<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+ star:'<path d="M12 3l2.7 6 6.3.6-4.8 4.2 1.5 6.2L12 16.7 6.3 20l1.5-6.2L3 9.6 9.3 9z"/>',
+ moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ inf:'<path d="M12 12c-2-3-3.5-4-5.5-4a4 4 0 0 0 0 8c2 0 3.5-1 5.5-4zm0 0c2 3 3.5 4 5.5 4a4 4 0 0 0 0-8c-2 0-3.5 1-5.5 4z"/>',
+ chev:'<path d="M9 6l6 6-6 6"/>', prev:'<path d="M15 6l-6 6 6 6"/>',
+ arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ mail:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 8l9 6 9-6"/>',
+ home:'<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/>',
+ hand:'<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V12m0-1a1.5 1.5 0 0 1 3 0v4.5a5 5 0 0 1-5 5h-1.5a5 5 0 0 1-4-2L5 15.5a1.5 1.5 0 0 1 2.3-1.9L9 15"/>'
+};
+const ic=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24">${P[n]}</svg>`;
+const lines=t=>t.split('\n').map(l=>l||'<br>').join('<br>');
+const media=(src,extra='',alt='')=>`<div class="media ${src?'':'ph'} ${extra}">${src?`<img src="${src}" alt="${alt}">`:''}</div>`;
+const C=CONFIG, ch=C.chapters;
+
+/* ============================ PANTALLAS ============================ */
+const S={};
+S.cover=`<section class="screen cover" id="cover">
+  <div class="top">
+    <h1 class="title rv">${C.years} años<span>con vos</span><em class="hrt">${ic('heart')}</em></h1>
+    <p class="sub rv">Siete años de historias, risas,<br>locuras y un amor que sigue creciendo.</p>
+    <div class="rv"><button class="btn solid" data-go="idx">Comenzar ${ic('arrow')}</button></div>
+  </div>
+  <!-- IMAGEN DE PORTADA (16:9) -->
+  ${media(C.cover,'rv')}
+</section>`;
+
+S.idx=`<section class="screen idx" id="idx">
+  <button class="close" data-go="cover" aria-label="Cerrar">${ic('x')}</button>
+  <h2 class="rv">Nuestra historia</h2>
+  <div class="div rv"><i></i>${ic('heart')}<i></i></div>
+  <p class="d rv">Cada capítulo guarda un momento especial de nosotros.</p>
+  <div class="list">${ch.map((c,i)=>`<button class="item rv" data-go="c${i}">${ic(c.icon)}<span>${c.title}</span>${ic('chev','ch')}</button>`).join('')}</div>
+  <div class="hint rv">${ic('hand')} Tocá un capítulo para comenzar</div>
+</section>`;
+
+ch.forEach((c,i)=>{
+  const last=i===ch.length-1, next=last?'env':'c'+(i+1), prev=i>0?'c'+(i-1):null;
+  const m=c.polaroid
+   ? `<div class="media pol rv"><div class="frame"><div class="in ${c.img?'':'ph'}" style="height:100%">${c.img?`<img src="${c.img}" alt="" style="width:100%;height:100%;object-fit:cover">`:''}</div>
+      <span class="spark" style="top:-6%;left:-6%;font-size:30px">✦</span><span class="spark" style="top:-8%;right:-5%;font-size:38px;animation-delay:.8s">✦</span>
+      <span class="spark" style="bottom:2%;right:-7%;font-size:30px;animation-delay:1.6s">✦</span><span class="spark" style="top:44%;left:-9%;font-size:16px;animation-delay:2.2s">✦</span></div></div>`
+   : media(c.img,'rv');
+  S['c'+i]=`<section class="screen" id="c${i}">
+    <div class="head rv"><h2>${ic(c.icon)}${c.title}</h2><div class="line"></div></div>
+    <!-- IMAGEN CAPÍTULO ${i+1} (16:9) -->
+    ${m}
+    ${i>0?`<button class="arrow l" data-go="${prev}" aria-label="Anterior">${ic('prev')}</button><button class="arrow r" data-go="${next}" aria-label="Siguiente">${ic('chev')}</button>`:''}
+    <p class="copy rv">${lines(c.text)}${c.accent?`<span class="acc">${c.accent}</span>`:''}</p>
+    <div class="foot rv"><button class="btn" data-go="${next}">Siguiente ${ic('arrow')}</button></div>
+  </section>`;
+});
+
+S.env=`<section class="screen env" id="env">
+  <!-- IMAGEN SOBRE (16:9) -->
+  ${media(C.envelope,'bg')}
+  <div class="t"><h2 class="rv">Ahora sí…</h2><p class="rv">Es momento de abrir mi carta.</p></div>
+  <div class="foot rv"><button class="btn" data-go="letter">${ic('mail')} Abrir carta</button></div>
+</section>`;
+
+S.letter=`<section class="screen letter" id="letter">
+  <div class="stage">
+    <!-- IMAGEN CARTA (16:9, papel al centro) -->
+    ${C.letterBg?`<img src="${C.letterBg}" alt="">`:'<div class="paper-fallback"></div>'}
+    <div class="paperbox">${C.letter.map((p,i)=>i===0?`<p class="ln hi" style="--i:0">${p}</p>`:i===C.letter.length-1?`<p class="ln sig" style="--i:${i}">${p}</p>`:`<p class="ln" style="--i:${i}">${lines(p)}</p>`).join('')}</div>
+  </div>
+  <div class="foot rv"><button class="btn" data-go="fin">Cerrar ${ic('x')}</button></div>
+</section>`;
+
+S.fin=`<section class="screen fin" id="fin">
+  <!-- IMAGEN FINAL (16:9) -->
+  ${media(C.final,'rv')}
+  <p class="copy rv">${lines(C.finalText)}</p>
+  <div class="div2 rv"><i></i>${ic('heart')}<i></i></div>
+  <div class="te rv">Te amo ${ic('heart')}</div>
+  <div class="foot rv" style="padding-top:14px"><button class="btn" data-go="cover">${ic('home')} Volver al inicio</button></div>
+</section>`;
+
+const app=document.getElementById('app');
+app.innerHTML=Object.values(S).join('');
+document.querySelectorAll('.screen').forEach(s=>s.querySelectorAll('.rv').forEach((el,i)=>el.style.setProperty('--i',i)));
+
+/* ============================ NAVEGACIÓN ============================ */
+let cur=null, fxTimer=null;
+function go(id){
+  const next=document.getElementById(id); if(!next||next===cur)return;
+  cur&&cur.classList.remove('active');
+  next.classList.remove('active'); void next.offsetWidth; next.classList.add('active'); cur=next;
+  clearInterval(fxTimer);
+  if(id==='env'||id==='fin'||id==='cover') fxTimer=setInterval(heart,id==='env'?520:900);
+  if(id==='letter') for(let i=0;i<10;i++)setTimeout(heart,i*160);
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-go]'); if(b){burst(e.clientX,e.clientY);go(b.dataset.go);}
+});
+go('cover');
+
+/* ============================ EFECTOS ============================ */
+function heart(){
+  const h=document.createElement('span'); h.className='fx'; h.textContent=Math.random()>.3?'♥':'✦';
+  h.style.left=Math.random()*100+'vw'; h.style.top=(60+Math.random()*35)+'vh';
+  h.style.fontSize=(10+Math.random()*16)+'px'; h.style.setProperty('--x',(Math.random()*80-40)+'px');
+  h.style.setProperty('--d',(5+Math.random()*4)+'s'); if(h.textContent==='✦')h.style.color='#ffe4a8';
+  document.body.appendChild(h); setTimeout(()=>h.remove(),9500);
+}
+function burst(x,y){
+  for(let i=0;i<8;i++){const s=document.createElement('span');s.className='burst';s.textContent='✦';
+    const a=Math.PI*2*i/8;s.style.left=x+'px';s.style.top=y+'px';s.style.fontSize=(8+Math.random()*8)+'px';
+    s.style.setProperty('--x',Math.cos(a)*(28+Math.random()*24)+'px');s.style.setProperty('--y',Math.sin(a)*(28+Math.random()*24)+'px');
+    document.body.appendChild(s);setTimeout(()=>s.remove(),850);}
+}
+
+/* cielo estrellado + estrellas fugaces */
+(()=>{
+  const cv=document.getElementById('sky'),x=cv.getContext('2d');let W,H,st=[],sh=null,dpr=Math.min(devicePixelRatio||1,2);
+  function size(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+    st=Array.from({length:Math.round(W*H/5200)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,p:Math.random()*6.28,s:.4+Math.random()*1.6,g:Math.random()>.93}));}
+  addEventListener('resize',size);size();
+  setInterval(()=>{if(!sh)sh={x:Math.random()*W*.8,y:Math.random()*H*.35,l:0}},7000);
+  (function f(t){
+    x.clearRect(0,0,W,H);
+    for(const s of st){const a=.35+.65*Math.abs(Math.sin(t/1000*s.s+s.p));
+      x.globalAlpha=a;x.fillStyle=s.g?'#ffe9b8':'#e8e6ff';x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill();
+      if(s.g){x.globalAlpha=a*.5;x.fillRect(s.x-5,s.y-.4,10,.8);x.fillRect(s.x-.4,s.y-5,.8,10);}}
+    if(sh){sh.l+=.02;const px=sh.x+sh.l*420,py=sh.y+sh.l*220,g=x.createLinearGradient(px,py,px-110,py-58);
+      g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(1,'rgba(255,255,255,0)');x.globalAlpha=1-sh.l*.6;
+      x.strokeStyle=g;x.lineWidth=1.6;x.beginPath();x.moveTo(px,py);x.lineTo(px-110,py-58);x.stroke();if(sh.l>1)sh=null;}
+    requestAnimationFrame(f);
+  })(0);
+})();
+</script>
+</body>
+</html>
