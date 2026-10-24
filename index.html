@@ -337,6 +337,27 @@ const app=document.getElementById('app');
 app.innerHTML=Object.values(S).join('');
 document.querySelectorAll('.screen').forEach(s=>s.querySelectorAll('.rv').forEach((el,i)=>el.style.setProperty('--i',i)));
 
+/* Preparar el ding decodificado para reducir la latencia, especialmente en móviles. */
+const DingAudioContext=window.AudioContext||window.webkitAudioContext;
+let dingContext=null,dingBuffer=null;
+if(DingAudioContext){
+  try{
+    dingContext=new DingAudioContext();
+    fetch('audio/ding.mp3').then(r=>{if(!r.ok)throw new Error('No se pudo cargar ding.mp3');return r.arrayBuffer();})
+      .then(data=>dingContext.decodeAudioData(data)).then(buffer=>{dingBuffer=buffer;}).catch(()=>{});
+  }catch{dingContext=null;}
+}
+function playDing(){
+  if(dingContext&&dingBuffer){
+    if(dingContext.state==='suspended')dingContext.resume().catch(()=>{});
+    const source=dingContext.createBufferSource(),gain=dingContext.createGain();
+    source.buffer=dingBuffer;gain.gain.value=.5;source.connect(gain);gain.connect(dingContext.destination);source.start(0);
+    return;
+  }
+  const fallback=document.getElementById('button-sound');
+  fallback.volume=.5;fallback.currentTime=0;fallback.play().catch(()=>{});
+}
+
 /* Esperar a que todas las imágenes estén cargadas (un error también cuenta como finalizado). */
 async function loadImages(){
   const images=[...document.querySelectorAll('#app img')], bar=document.getElementById('load-bar'), message=document.getElementById('load-message');
@@ -364,10 +385,7 @@ function go(id){
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-go]'); if(b){
     burst(e.clientX,e.clientY);
-    const buttonSound=document.getElementById('button-sound');
-    buttonSound.volume=.5;
-    buttonSound.currentTime=0;
-    buttonSound.play().catch(()=>{});
+    playDing();
     if(b.dataset.go==='idx'){
       const music=document.getElementById('bg-music');
       music.volume=.35;
