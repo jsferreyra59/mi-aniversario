@@ -198,6 +198,15 @@ svg{display:block}
 </div>
 <canvas id="sky"></canvas>
 <main id="app"></main>
+<audio id="bg-music" loop preload="auto" aria-hidden="true">
+  <source src="audio/soundtrack.mp3" type="audio/mpeg">
+</audio>
+<audio id="paper-sound" preload="auto" aria-hidden="true">
+  <source src="audio/paper-sound.mp3" type="audio/mpeg">
+</audio>
+<audio id="button-sound" preload="auto" aria-hidden="true">
+  <source src="audio/ding.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 /* =====================================================================
@@ -353,7 +362,25 @@ function go(id){
   if(id==='letter') for(let i=0;i<10;i++)setTimeout(heart,i*160);
 }
 document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-go]'); if(b){burst(e.clientX,e.clientY);go(b.dataset.go);}
+  const b=e.target.closest('[data-go]'); if(b){
+    burst(e.clientX,e.clientY);
+    const buttonSound=document.getElementById('button-sound');
+    buttonSound.volume=.5;
+    buttonSound.currentTime=0;
+    buttonSound.play().catch(()=>{});
+    if(b.dataset.go==='idx'){
+      const music=document.getElementById('bg-music');
+      music.volume=.35;
+      music.play().catch(()=>{});
+    }
+    if(b.dataset.go==='letter'){
+      const paperSound=document.getElementById('paper-sound');
+      paperSound.volume=.9;
+      paperSound.currentTime=0;
+      paperSound.play().catch(()=>{});
+    }
+    go(b.dataset.go);
+  }
 });
 loadImages().then(()=>{go('cover');document.getElementById('loader').classList.add('done');});
 
