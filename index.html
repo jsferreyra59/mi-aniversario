@@ -144,6 +144,16 @@ svg{display:block}
 .burst{position:fixed;pointer-events:none;z-index:99;color:var(--gold);text-shadow:0 0 8px var(--gold);animation:bs .8s ease-out forwards}
 @keyframes bs{to{opacity:0;transform:translate(var(--x),var(--y)) scale(.3)}}
 
+/* ---------- pantalla de carga ---------- */
+#loader{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  background:linear-gradient(180deg,var(--bg),#141046 55%,var(--bg3));transition:opacity .6s ease,visibility .6s}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none}
+#loader .load-heart{font-size:42px;color:var(--accent);text-shadow:0 0 24px rgba(251,209,201,.75);animation:load-pulse 1.2s ease-in-out infinite}
+#loader p{font-family:var(--script);font-size:28px;color:var(--lav)}
+#loader .load-track{width:min(64vw,220px);height:3px;border-radius:9px;background:rgba(205,184,245,.2);overflow:hidden}
+#loader .load-bar{height:100%;width:0;background:linear-gradient(90deg,var(--lav),var(--accent));transition:width .25s ease}
+@keyframes load-pulse{50%{transform:scale(1.14);opacity:.72}}
+
 /* ============ MÓVIL: imagen de fondo grande, texto encima ============ */
 @media (max-width:819px){
   .screen{justify-content:flex-end}
@@ -181,6 +191,11 @@ svg{display:block}
 </style>
 </head>
 <body>
+<div id="loader" role="status" aria-live="polite" aria-label="Cargando imágenes">
+  <span class="load-heart" aria-hidden="true">♥</span>
+  <p id="load-message">Preparando nuestra historia…</p>
+  <div class="load-track" aria-hidden="true"><div class="load-bar" id="load-bar"></div></div>
+</div>
 <canvas id="sky"></canvas>
 <main id="app"></main>
 
@@ -313,6 +328,20 @@ const app=document.getElementById('app');
 app.innerHTML=Object.values(S).join('');
 document.querySelectorAll('.screen').forEach(s=>s.querySelectorAll('.rv').forEach((el,i)=>el.style.setProperty('--i',i)));
 
+/* Esperar a que todas las imágenes estén cargadas (un error también cuenta como finalizado). */
+async function loadImages(){
+  const images=[...document.querySelectorAll('#app img')], bar=document.getElementById('load-bar'), message=document.getElementById('load-message');
+  if(!images.length){bar.style.width='100%';return;}
+  let finished=0;
+  const update=()=>{finished++;bar.style.width=`${Math.round(finished/images.length*100)}%`;
+    message.textContent=`Cargando recuerdos… ${finished}/${images.length}`;};
+  await Promise.all(images.map(img=>new Promise(resolve=>{
+    const done=()=>{update();resolve();};
+    if(img.complete){done();return;}
+    img.addEventListener('load',done,{once:true});img.addEventListener('error',done,{once:true});
+  })));
+}
+
 /* ============================ NAVEGACIÓN ============================ */
 let cur=null, fxTimer=null;
 function go(id){
@@ -326,7 +355,7 @@ function go(id){
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-go]'); if(b){burst(e.clientX,e.clientY);go(b.dataset.go);}
 });
-go('cover');
+loadImages().then(()=>{go('cover');document.getElementById('loader').classList.add('done');});
 
 /* ============================ EFECTOS ============================ */
 function heart(){
