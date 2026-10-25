@@ -241,7 +241,7 @@ const CONFIG = {
     { icon:"camera", title:"2. Nuestros momentos", polaroid:true,
       // Reemplazá cada null por la ruta de la foto que agregues a /img.
       photos:["img/c2-1.png", "img/c2-2.png", "img/c2-3.png", "img/c2-4.png"],
-      text:"Todas esas noches de juegos y esa salida que terminó en pizza,\nrisas y una de las mejores noches\nde nuestras vidas." },
+      text:"Todo es mas lindo contigo,\n desde esas noches de baile, series y películas,\n hasta los dias de paseo o juegos,\nque terminan en risas y miradas nocturnas.\nLo simple se vuelve lo mejor de nuestras vidas." },
     { icon:"star",   title:"3. Lo que nos hace únicos",
       img:"img/c3.png",
       text:"Tenerte hace que lo simple\nse vuelva especial.\nTu risa, tu forma de ver la vida,\ny cómo siempre encontrás la manera\nde hacerme sentir en casa." },
@@ -253,10 +253,12 @@ const CONFIG = {
       text:"No sé qué nos deparará el futuro,\npero sí sé que quiero seguir eligiéndote\ntodos los días.", accent:"Por muchos años más…" }
   ],
   letter:[
-    "Mi persona favorita, amor de la vida,",
-    "Siete años. Parece mucho y a la vez\nse siente como un segundo.\nEn todo este tiempo, me regalaste\nmomentos que siempre voy a atesorar,\nme acompañaste en cada etapa,\ny me diste un amor que no es común.",
-    "Gracias por estar, por confiar,\npor las risas, por las locuras,\ny por hacer de lo cotidiano algo especial.",
+    "Mi persona favorita, mi amor de la vida.",
+    "Siete años. Parece mucho y a la vez\nse siente como un segundo.\nEn todo este tiempo, me regalaste\nmomentos que siempre voy a guardar en mi corazón,\nme acompañaste en cada etapa,\ny me diste un amor que es único.",
+    "Gracias por estar, por confiar,\npor las risas, por las locuras,\ny por convertir todos los dias en algo especial.",
     "Quiero seguir construyendo todo lo lindo\nque nos queda, a tu lado.\nHoy y siempre.",
+    "Espero que te haya gustado, es algo distinto pero quise hacerlo para ti.",
+    "Con mucho amor, tu novio.",
     "Te amo ♡"
   ],
   finalText:"Por estos 7 años…\ny por todos los que nos quedan."
@@ -339,7 +341,7 @@ S.fin=`<section class="screen fin" id="fin">
   ${media(C.final,'rv')}
   <p class="copy rv">${lines(C.finalText)}</p>
   <div class="div2 rv"><i></i>${ic('heart')}<i></i></div>
-  <div class="te rv">Te amo ${ic('heart')}</div>
+  <div class="te rv">Te amo${ic('heart')}</div>
   <div class="foot rv" style="padding-top:14px"><button class="btn" data-go="cover">${ic('home')} Volver al inicio</button></div>
 </section>`;
 
